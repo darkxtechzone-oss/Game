@@ -53,6 +53,8 @@ func _ready():
     build_player()
     build_ui()
     show_start_message()
+    if has_node("Boot"):
+        $Boot.queue_free()
 
 func mat(c: Color) -> StandardMaterial3D:
     var key := c.to_html()
@@ -81,7 +83,7 @@ func build_environment():
     env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
     env.ambient_light_color = Color(0.8, 0.85, 0.95)
     env.ambient_light_energy = 0.8
-    env.fog_enabled = true
+    env.fog_enabled = false
     env.fog_light_color = sky
     env.fog_density = 0.02
     var we := WorldEnvironment.new()
@@ -360,12 +362,12 @@ func spawn_pattern():
     match rng.randi_range(0, 8):
         0, 1:
             # treni kwenye njia mbili, njia ya tatu ina sarafu
-            var free := rng.randi_range(0, 2)
+            var free_lane := rng.randi_range(0, 2)
             var tlen := rng.randf_range(5.0, 8.0)
             for k in 3:
-                if k != free:
+                if k != free_lane:
                     add_train(k, z, tlen)
-            add_coin_row(free, z - tlen / 2.0, 6)
+            add_coin_row(free_lane, z - tlen / 2.0, 6)
         2:
             add_train(l, z, rng.randf_range(4.0, 7.0))
         3, 4:
